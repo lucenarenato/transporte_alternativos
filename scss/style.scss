@@ -1,0 +1,389 @@
+// cdn
+$host: 'http://www.mantovanig.it/pen/';
+
+// colors
+$pink: #fad8bc;
+$pink-dark: #ffb584;
+$pink-light: #fbe1ca;
+$gray: #5c5c5c;
+$gray-light: #c2bab8;
+$azul: #bcdefa;
+
+// font
+$main-font: 'Encode Sans', sans-serif;
+$secondary-font: 'Nothing You Could Do', cursive;
+
+// svg
+$placeholder-svg: $host + 'svg/placeholder-filled-point.svg';
+$arrow-right-svg: $host + 'svg/arrow-pointing-to-right.svg';
+
+// timing
+$options-delays: (0.2s, 0.5s, 0, 0.3s);
+$menu-delays: (1.1s, 1.5s, 1.3s, 0.9s);
+
+// mixins
+@mixin reset-button() {
+  border: none;
+  background: transparent;
+  outline: none;
+}
+
+
+// animations
+@keyframes hiding {
+  0% {
+    transform: translateY(0px);
+  }
+  100% {
+    transform: translateY(80px);
+  }
+}
+
+@keyframes showing {
+  0% {
+    transform: translateY(80px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+// style
+body {
+  margin: 0;
+  padding: 0;
+  background-color: $azul;
+  background-image: -webkit-linear-gradient(
+    -30deg,
+    $azul 49.99%,
+    $pink-light 50%
+  );
+  min-height: 100vh;
+}
+
+.container {
+  padding: 90px 50px;
+}
+
+.container__payoff {
+  text-align: center;
+  font-family: $secondary-font;
+  font-size: 20px;
+  color: $gray;
+}
+
+.container__title {
+  font-family: $main-font;
+  text-align: center;
+  font-weight: 100;
+  letter-spacing: 4px;
+  font-size: 35px;
+  color: $gray;
+  padding-bottom: 20px;
+}
+
+.box {
+  width: 700px;
+  height: 400px;
+  margin: 0 auto;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.10);
+  position: relative;
+}
+
+.box__header {
+  width: 100%;
+  height: 100px;
+  background-color: rgba(250, 240, 230, 0.7);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+
+  .menu {
+    flex-basis: 10%;
+    svg {
+      width: auto;
+      height: 20px;
+      display: block;
+      padding: 0 30px;
+      fill: $gray;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
+    button {
+      @include reset-button;
+    }
+
+    svg#hamburger {
+      display: block;
+    }
+
+    svg#ics {
+      display: none;
+    }
+  }
+
+  .options {
+    flex-basis: 80%;
+
+    ul {
+      @for $i from 1 through length($options-delays) {
+        li:nth-child(#{$i}) {
+          animation-delay: nth($options-delays, $i);
+        }
+      }
+
+      li {
+        animation: showing 0.2s linear;
+        animation-fill-mode: forwards;
+        transform: translateY(80px);
+        opacity: 0;
+      }
+    }
+  }
+
+  .options, .menu__elements {
+    ul {
+      list-style-type: none;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 30px;
+
+      li {
+        position: relative;
+        opacity: 0.5;
+        transition: opacity 0.5s ease-in-out;
+
+        .icon svg {
+          height: 40px;
+          display: block;
+          margin: 0 auto;
+          fill: $gray;
+        }
+
+        .text {
+          font-family: $main-font;
+          font-size: 13px;
+          letter-spacing: 2px;
+          text-align: center;
+          display: block;
+          font-weight: 400;
+          color: $gray;
+        }
+
+        &:hover {
+          opacity: 1;
+          cursor: pointer;
+        }
+
+        &.selected {
+          opacity: 1;
+
+          &:after {
+            position: absolute;
+            content: '';
+            width: 100%;
+            height: 3px;
+            background-color: $azul
+            bottom: -21px;
+          }
+        }
+      }
+    }
+  }
+
+  .menu__elements {
+    position: absolute;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    width: 80%;
+    top: 8px;
+    height: 100px;
+
+    ul {
+      @for $i from 1 through length($menu-delays) {
+        li:nth-child(#{$i}) {
+          animation-delay: nth($menu-delays, $i);
+        }
+      }
+
+      li {
+        transform: translateY(100px);
+        opacity: 0;
+      }
+    }
+  }
+
+  .search {
+    flex-basis: 10%;
+
+    input {
+      width: 400px;
+      border: none;
+      border-bottom: solid 3px $pink-dark;
+      background: transparent;
+      position: absolute;
+      left: 0;
+      right: 0;
+      margin: 0 auto;
+      height: 35px;
+      top: 30px;
+      transform: translateY(80px);
+      z-index: 2;
+      outline: none;
+      font-size: 14px;
+      font-family: $main-font;
+    }
+
+    button {
+      @include reset-button;
+    }
+
+    svg {
+      width: auto;
+      height: 20px;
+      display: block;
+      padding: 0 30px;
+      fill: $gray;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
+    svg#lens {
+      display: block;
+    }
+
+    svg#ics {
+      display: none;
+    }
+  }
+}
+
+.box__header--searchActive, .box__header--menuActive {
+  .options {
+    ul li {
+      transform: translateY(0);
+      animation: hiding 0.2s linear;
+      animation-fill-mode: forwards;
+    }
+
+    @for $i from 1 through length($options-delays) {
+      li:nth-child(#{$i}) {
+        animation-delay: nth($options-delays, $i);
+      }
+    }
+  }
+}
+
+.box__header--menuActive {
+  .menu__elements {
+    ul li {
+      animation: showing 0.2s linear;
+      animation-fill-mode: forwards;
+      opacity: 0.5;
+    }
+  }
+  
+  .menu {
+    svg#hamburger {
+      display: none;
+    }
+
+    svg#ics {
+      display: block;
+    }
+  }
+}
+
+.box__header--searchActive {
+  .search {
+    input {
+      animation: showing 0.2s linear;
+      animation-delay: 0.7s;
+      animation-fill-mode: forwards;
+    }
+    
+    svg#lens {
+      display: none;
+    }
+
+    svg#ics {
+      display: block;
+    }
+  }
+}
+
+.box__content {
+  width: 100%;
+  text-align: center;
+  position: relative;
+  z-index: 3;
+  background: #faf7f2;
+  min-height: calc(100% - 100px);
+
+  p {
+    font-family: $main-font;
+    font-size: 16px;
+    color: $gray;
+    text-align: center;
+    margin: 0 auto;
+    letter-spacing: 0.6px;
+    margin-bottom: 25px;
+    padding-top: 70px;
+  }
+
+  input {
+    margin: 0 auto;
+    width: 390px;
+    border-radius: 3px;
+    height: 36px;
+    font-size: 14px;
+    font-family: $main-font;
+    border: 1px solid $gray-light;
+    outline: none;
+    padding: 0 15px;
+    color: $gray;
+    background: url($placeholder-svg) no-repeat scroll;
+    padding-right: 30px;
+    background-size: 20px;
+    background-position: calc(100% - 10px);
+
+    &::placeholder {
+      color: $gray-light;
+    }
+  }
+}
+
+.box__nav {
+  .next {
+    position: absolute;
+    bottom: 25px;
+    right: 20px;
+    z-index: 4;
+
+    button {
+      @include reset-button;
+      font-family: $main-font;
+      color: $gray;
+      letter-spacing: 2px;
+      font-size: 14px;
+
+      &:after {
+        content: '';
+        display: inline-block;
+        background: url($arrow-right-svg) no-repeat scroll;
+        background-size: 20px;
+        width: 20px;
+        height: 20px;
+        vertical-align: middle;
+        margin-top: -4px;
+        margin-left: 10px;
+      }
+    }
+  }
+}
